@@ -66,6 +66,15 @@ body {
   animation-play-state: paused;
 }
 
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.spin-slow {
+  animation: spin 22s linear infinite;
+  transform-origin: center;
+}
+
 @keyframes float-y {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-14px); }
@@ -95,7 +104,7 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .marquee-track, .text-gradient, .float-slow, .scroll-hint {
+  .marquee-track, .text-gradient, .float-slow, .scroll-hint, .spin-slow {
     animation: none;
   }
 }

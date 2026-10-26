@@ -249,6 +249,20 @@ export default function App() {
 
       <Section id="skills" kicker="Skills" title="What I work with">
         <p data-reveal className="-mt-4 max-w-2xl text-slate-400">Consolidated from the projects in this portfolio. Keep only technologies you have actually used and can explain in an interview — this list is the starting point, not a claim of expert proficiency in every item.</p>
+        <div data-reveal className="relative mx-auto mt-10 h-52 w-52">
+          <svg viewBox="0 0 200 200" className="spin-slow absolute inset-0 h-full w-full">
+            <defs>
+              <path id="skill-circle" d="M100,100 m-78,0 a78,78 0 1,1 156,0 a78,78 0 1,1 -156,0" />
+            </defs>
+            <text className="fill-cyan-300" style={{ fontSize: '13px', letterSpacing: '3px', fontWeight: 600 }}>
+              <textPath href="#skill-circle">PYTHON • REACT • AI / ML • TAILWIND • NODE.JS • NEXT.JS •</textPath>
+            </text>
+          </svg>
+          <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
+            <span className="font-display text-2xl font-bold">Skills</span>
+            <span className="mt-1 text-xs text-slate-400">rotating — full list below</span>
+          </div>
+        </div>
         <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {skillGroups.map((g) => (
             <div key={g.title} data-reveal className="glass rounded-3xl p-6 transition hover:border-cyan-400/40">

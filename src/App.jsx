@@ -86,6 +86,25 @@ const hackathons = [
   'OOSC 4.0 Hackathon',
 ]
 
+// Exact list supplied by Habeeb on 2026-10-26 (13 certificates).
+// None of these is labelled a win, so the 1 win is shown separately as
+// "event to confirm" until he names it. Do not upgrade any of these to a win.
+const certificates = [
+  { name: 'ProduScope 2026: The Product Case Study Competition', type: 'Certificate of Participation', date: 'Oct 2026', source: 'Unstop' },
+  { name: 'CODEFUSION 2k26', type: 'Certificate of Participation', date: 'Oct 2026', source: 'Unstop' },
+  { name: 'Round 1 - Assessment of TVS Credit E.P.I.C 8.0 — IT Challenge', type: 'Certificate of Participation', date: 'Oct 2026', source: 'Unstop' },
+  { name: 'Introduction to Generative AI', type: 'Course certificate', date: 'Oct 2026', source: 'Google' },
+  { name: 'IdeaForge of Buildathon 2026', type: 'Certificate of Participation', date: 'Aug 2026', source: 'Unstop' },
+  { name: 'Sangyan Hackathon', type: 'Certificate of Excellence in Submission through Unstop', date: 'Oct 2026', source: 'Unstop' },
+  { name: 'NeuraMorphix HackForge 2026', type: 'Certificate of Participation', date: 'Oct 2026', source: 'Unstop' },
+  { name: 'Omnikon National Hackathon 2026', type: 'Certificate of Participation', date: 'Sep 2026', source: 'Unstop' },
+  { name: 'AI Foundations', type: 'Course certificate', date: 'Aug 2026', source: 'OpenAI' },
+  { name: 'Claude Academy: Introduction to Claude Cowork', type: 'Course certificate', date: 'Aug 2026', source: 'Anthropic' },
+  { name: 'OOSC 4.0 Hackathon of Opportunity Open Source Conference (OOSC) - 4.0', type: 'Certificate of Participation', date: 'Aug 2026', source: 'Unstop' },
+  { name: 'HackDevengers 1.0 of HackDevengers', type: 'Certificate of Participation', date: 'Aug 2026', source: 'Unstop' },
+  { name: '3SVK SEASON: 2 - Evaluation Round of “National Cloud', type: 'Certificate of Participation', date: 'Aug 2026', source: 'Unstop' },
+]
+
 const strengths = [
   'Problem-solving and analytical thinking',
   'AI-powered software development',
@@ -118,18 +137,45 @@ export default function App() {
       gsap.from('.hero-in', { y: 40, opacity: 0, duration: 1, ease: 'power3.out', stagger: 0.12 })
       gsap.utils.toArray('[data-reveal]').forEach((el) => {
         gsap.from(el, {
-          y: 40, opacity: 0, duration: 0.9, ease: 'power3.out',
+          y: 50, opacity: 0, scale: 0.97, duration: 0.9, ease: 'power3.out',
           scrollTrigger: { trigger: el, start: 'top 88%' },
         })
       })
       gsap.to('.orb-a', { y: 60, duration: 6, ease: 'sine.inOut', yoyo: true, repeat: -1 })
       gsap.to('.orb-b', { y: -50, x: 30, duration: 7, ease: 'sine.inOut', yoyo: true, repeat: -1 })
+      // Parallax orbs on scroll
+      gsap.to('.orb-a', { yPercent: 30, ease: 'none', scrollTrigger: { trigger: '#home', start: 'top top', end: 'bottom top', scrub: true } })
+      gsap.to('.orb-b', { yPercent: -20, ease: 'none', scrollTrigger: { trigger: '#home', start: 'top top', end: 'bottom top', scrub: true } })
+      // Animated counters: elements carry data-count="14" etc.
+      gsap.utils.toArray('[data-count]').forEach((el) => {
+        const target = Number(el.dataset.count || 0)
+        const obj = { v: 0 }
+        gsap.to(obj, {
+          v: target, duration: 1.6, ease: 'power2.out',
+          scrollTrigger: { trigger: el, start: 'top 92%', once: true },
+          onUpdate: () => { el.textContent = String(Math.round(obj.v)) },
+        })
+      })
+      // Scroll progress bar
+      gsap.to('.scroll-progress', {
+        scaleX: 1, ease: 'none',
+        scrollTrigger: { trigger: document.body, start: 'top top', end: 'bottom bottom', scrub: 0.3 },
+      })
+      // Mouse-follow glow (desktop only, element hidden on small screens)
+      const glow = document.querySelector('.cursor-glow')
+      if (glow && window.matchMedia('(pointer: fine)').matches) {
+        const xTo = gsap.quickTo(glow, 'x', { duration: 0.6, ease: 'power3' })
+        const yTo = gsap.quickTo(glow, 'y', { duration: 0.6, ease: 'power3' })
+        window.addEventListener('mousemove', (e) => { xTo(e.clientX - 200); yTo(e.clientY - 200) })
+      }
     })
     return () => { cancelAnimationFrame(rafId); lenis.destroy(); ctx.revert() }
   }, [])
 
   return (
     <div className="relative min-h-screen overflow-x-clip bg-[#070b14]">
+      <div className="scroll-progress fixed inset-x-0 top-0 z-[60] h-1 origin-left scale-x-0 bg-gradient-to-r from-cyan-400 via-violet-400 to-pink-400" />
+      <div className="cursor-glow pointer-events-none fixed left-0 top-0 z-0 hidden h-[400px] w-[400px] rounded-full bg-cyan-500/10 blur-[100px] md:block" />
       <nav className="fixed inset-x-0 top-0 z-50">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-4 sm:px-8">
           <a href="#home" className="glass rounded-full px-4 py-2 font-display text-sm font-bold">C. HABEEB</a>
@@ -165,13 +211,24 @@ export default function App() {
             <a href={GITHUB} target="_blank" rel="noreferrer" className="glass rounded-full px-6 py-3 font-semibold hover:bg-white/10">GitHub Profile</a>
             <a href="#contact" className="glass rounded-full px-6 py-3 font-semibold hover:bg-white/10">Contact</a>
           </div>
-          <div className="hero-in mt-12 grid max-w-2xl grid-cols-3 gap-4 text-center">
-            <div className="glass rounded-2xl p-4"><p className="font-display text-2xl font-bold">7</p><p className="mt-1 text-xs text-slate-400">Featured projects</p></div>
-            <div className="glass rounded-2xl p-4"><p className="font-display text-2xl font-bold">4</p><p className="mt-1 text-xs text-slate-400">Hackathons listed</p></div>
-            <div className="glass rounded-2xl p-4"><p className="font-display text-2xl font-bold">7</p><p className="mt-1 text-xs text-slate-400">Skill areas</p></div>
+          <div className="hero-in mt-12 grid max-w-3xl grid-cols-2 gap-4 text-center sm:grid-cols-4">
+            <div className="glass float-slow rounded-2xl p-4"><p data-count="13" className="font-display text-2xl font-bold">0</p><p className="mt-1 text-xs text-slate-400">Certificates listed</p></div>
+            <div className="glass float-slow rounded-2xl p-4"><p data-count="1" className="font-display text-2xl font-bold">0</p><p className="mt-1 text-xs text-slate-400">Hackathon win</p></div>
+            <div className="glass float-slow rounded-2xl p-4"><p data-count="3" className="font-display text-2xl font-bold">0</p><p className="mt-1 text-xs text-slate-400">Shipped products</p></div>
+            <div className="glass float-slow rounded-2xl p-4"><p data-count="7" className="font-display text-2xl font-bold">0</p><p className="mt-1 text-xs text-slate-400">Featured projects</p></div>
           </div>
+          <p className="hero-in mt-6 text-sm text-slate-500">Scroll ↓ — every section animates in, cards lift on hover, and the bar at the very top tracks your scroll.</p>
+          <div className="scroll-hint mt-4 text-2xl text-cyan-300">↓</div>
         </div>
       </header>
+
+      <div className="relative overflow-hidden border-y border-white/10 bg-white/[0.03] py-4">
+        <div className="marquee-track gap-8 text-sm font-semibold uppercase tracking-[0.2em] text-slate-300">
+          {['AI & ML', 'React', 'Hackathons', 'Computer Vision', 'Full-Stack', 'Python', 'Tailwind CSS', 'Data & APIs', 'AI & ML', 'React', 'Hackathons', 'Computer Vision', 'Full-Stack', 'Python', 'Tailwind CSS', 'Data & APIs'].map((t, i) => (
+            <span key={i} className="whitespace-nowrap">{t} <span className="ml-8 text-cyan-300">✦</span></span>
+          ))}
+        </div>
+      </div>
 
       <Section id="about" kicker="About me" title="Turning ideas into practical software">
         <div className="grid gap-6 md:grid-cols-2">
@@ -210,7 +267,7 @@ export default function App() {
         <p data-reveal className="-mt-4 max-w-2xl text-slate-400">Status is labelled honestly: “Built” only where a working product exists, “Concept” where the spec itself describes a proposed idea. No demo or repository link is shown unless it is verified — add those links per project before publishing.</p>
         <div className="mt-8 grid gap-5 md:grid-cols-2">
           {projects.map((p) => (
-            <article key={p.name} data-reveal className="glass group rounded-3xl p-7 transition duration-300 hover:-translate-y-1 hover:border-cyan-400/40">
+            <article key={p.name} data-reveal className="glass card-glow group rounded-3xl p-7">
               <div className="flex items-start justify-between gap-3">
                 <p className="text-xs font-semibold uppercase tracking-widest text-cyan-300">{p.tag}</p>
                 <span className="shrink-0 rounded-full bg-cyan-400/15 px-3 py-1 text-xs font-semibold text-cyan-200 ring-1 ring-cyan-400/30">{p.status}</span>
@@ -236,7 +293,7 @@ export default function App() {
       </Section>
 
       <Section id="achievements" kicker="Achievements" title="Achievements & profiles">
-        <p data-reveal className="-mt-4 max-w-2xl text-slate-400">Built from verified records only. LinkedIn profile is linked below (supplied by Habeeb). LinkedIn's own page blocked a direct read, so a live-browser check of that profile is underway — any LinkedIn-only achievement will be added only from what that check actually shows, not guessed.</p>
+        <p data-reveal className="-mt-4 max-w-2xl text-slate-400">Built from verified records only. LinkedIn's page blocked both a direct read and a live-browser check (sign-in wall only), so no LinkedIn-only achievement is claimed here — paste or screenshot those items and they will be added verbatim.</p>
         <div className="mt-8 grid gap-5 md:grid-cols-2">
           <div data-reveal className="glass rounded-3xl p-7">
             <h3 className="font-display text-lg font-bold">Shipped products</h3>
@@ -291,9 +348,22 @@ export default function App() {
           </div>
         </div>
         <div data-reveal className="glass mt-5 rounded-3xl p-7">
-          <h3 className="font-display text-lg font-bold">Certificates &amp; learning</h3>
-          <p className="mt-3 text-slate-400">Categories: AI &amp; ML, Python &amp; programming, data analytics, web development, cybersecurity, NPTEL IoT, and hackathon participation certificates.</p>
-          <p className="mt-2 text-sm text-slate-500">Add exact certificate titles, issuing organisations, completion dates and verification URLs from your actual certificates before publishing.</p>
+          <h3 className="font-display text-lg font-bold">🏆 1 hackathon win — event to confirm</h3>
+          <p className="mt-3 text-slate-400">You told me you have <strong>14 hackathon certificates and 1 win</strong>. None of the 13 certificates you just sent is labelled a win — all are Participation, Excellence-in-Submission, or course certificates. Tell me which one you won (or if the win is the 14th certificate) and it will be highlighted at the top of this section, not guessed.</p>
+        </div>
+        <div data-reveal className="glass mt-5 rounded-3xl p-7">
+          <h3 className="font-display text-lg font-bold">Certificates — all 13 you sent, by name</h3>
+          <p className="mt-3 text-slate-400">Exact titles, issuers and months as you sent them. You mentioned 14 in total, so one is still missing from this list — send that last one and it will be added here too.</p>
+          <div className="mt-5 grid gap-4 sm:grid-cols-2">
+            {certificates.map((c) => (
+              <div key={c.name} className="card-glow rounded-2xl bg-white/5 p-5 ring-1 ring-white/10">
+                <p className="font-display font-bold">{c.name}</p>
+                <p className="mt-2 text-sm text-cyan-200">{c.type}</p>
+                <p className="mt-1 text-sm text-slate-400">{c.source} · {c.date}</p>
+              </div>
+            ))}
+          </div>
+          <p className="mt-5 text-sm text-slate-500">Kannada Digital Innovation Hackathon 2026 is not in this certificate list — its project was submitted successfully, but no certificate for it was in the list you sent, so it is not claimed as a certificate here.</p>
         </div>
       </Section>
 

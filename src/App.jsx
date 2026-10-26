@@ -236,7 +236,7 @@ export default function App() {
       </Section>
 
       <Section id="achievements" kicker="Achievements" title="Achievements & profiles">
-        <p data-reveal className="-mt-4 max-w-2xl text-slate-400">Built from verified records only. I could not find a public LinkedIn profile for C. Habeeb by searching the web or your mailbox, so no LinkedIn-only achievement is claimed here — paste your LinkedIn URL and I will add those items verbatim.</p>
+        <p data-reveal className="-mt-4 max-w-2xl text-slate-400">Built from verified records only. LinkedIn profile is linked below (supplied by Habeeb). LinkedIn's own page blocked a direct read, so a live-browser check of that profile is underway — any LinkedIn-only achievement will be added only from what that check actually shows, not guessed.</p>
         <div className="mt-8 grid gap-5 md:grid-cols-2">
           <div data-reveal className="glass rounded-3xl p-7">
             <h3 className="font-display text-lg font-bold">Shipped products</h3>
@@ -268,7 +268,8 @@ export default function App() {
             <a href="https://github.com/habeebc84-create/tripplanner" target="_blank" rel="noreferrer" className="rounded-2xl bg-white/5 px-4 py-3 ring-1 ring-white/10 hover:bg-white/10"><span className="font-semibold">Karnataka Yatra AI — GitHub</span><span className="block break-all text-sm text-slate-400">github.com/habeebc84-create/tripplanner</span></a>
             <a href="https://unstop.com/u/habeec96039" target="_blank" rel="noreferrer" className="rounded-2xl bg-white/5 px-4 py-3 ring-1 ring-white/10 hover:bg-white/10"><span className="font-semibold">Unstop</span><span className="block break-all text-sm text-slate-400">unstop.com/u/habeec96039</span></a>
             <a href="https://instagram.com/c_habeeb_12" target="_blank" rel="noreferrer" className="rounded-2xl bg-white/5 px-4 py-3 ring-1 ring-white/10 hover:bg-white/10"><span className="font-semibold">Instagram</span><span className="block break-all text-sm text-slate-400">@c_habeeb_12</span></a>
-            <div className="rounded-2xl bg-white/5 px-4 py-3 ring-1 ring-white/10"><span className="font-semibold">LinkedIn</span><span className="block text-sm text-slate-400">Not found publicly — add your URL here.</span></div>
+            <a href="https://www.linkedin.com/in/habeeb-c-727a34385/" target="_blank" rel="noreferrer" className="rounded-2xl bg-white/5 px-4 py-3 ring-1 ring-white/10 hover:bg-white/10"><span className="font-semibold">LinkedIn</span><span className="block break-all text-sm text-slate-400">linkedin.com/in/habeeb-c-727a34385</span></a>
+            <a href="mailto:habeebc84@gmail.com" className="rounded-2xl bg-white/5 px-4 py-3 ring-1 ring-white/10 hover:bg-white/10"><span className="font-semibold">Email</span><span className="block break-all text-sm text-slate-400">habeebc84@gmail.com</span></a>
           </div>
         </div>
       </Section>
@@ -302,13 +303,14 @@ export default function App() {
             <h3 className="font-display font-bold">GitHub</h3>
             <p className="mt-2 break-all text-slate-400">{GITHUB}</p>
           </a>
-          <a data-reveal href="#achievements" className="glass rounded-3xl p-7 transition hover:border-cyan-400/40">
-            <h3 className="font-display font-bold">All profiles</h3>
-            <p className="mt-2 text-slate-400">GitHub, Unstop, Instagram and project repos are listed in Achievements. LinkedIn is still to add — I could not find it publicly.</p>
+          <a data-reveal href="https://www.linkedin.com/in/habeeb-c-727a34385/" target="_blank" rel="noreferrer" className="glass rounded-3xl p-7 transition hover:border-cyan-400/40">
+            <h3 className="font-display font-bold">LinkedIn</h3>
+            <p className="mt-2 break-all text-slate-400">linkedin.com/in/habeeb-c-727a34385</p>
           </a>
           <div data-reveal className="glass rounded-3xl p-7">
             <h3 className="font-display font-bold">Email &amp; Resume</h3>
-            <p className="mt-2 text-slate-400">Add your professional email and latest resume PDF here before publishing.</p>
+            <p className="mt-2 break-all text-slate-400"><a href="mailto:habeebc84@gmail.com" className="text-cyan-300 hover:text-cyan-200">habeebc84@gmail.com</a></p>
+            <p className="mt-2 text-slate-400">Add your latest resume PDF here before publishing.</p>
           </div>
         </div>
         <p data-reveal className="mt-8 text-sm text-slate-500">Draft note: this site intentionally leaves LinkedIn, email, resume, project demo/source links, CGPA and certificate verification links as to-fill items — see README.md — rather than inventing them.</p>

@@ -25,7 +25,9 @@ npm run build
 Import this repo on Vercel with the Vite preset, or publish with GitHub Pages from the `dist` output after `npm run build`.
 
 ## Before publishing — fill these in (do not invent them)
-- [ ] LinkedIn URL and professional email
+- [ ] LinkedIn URL — searched the web and Gmail on 2026-10-26, no public profile found for C. Habeeb; paste the URL and LinkedIn achievements will be added verbatim
+- [x] Profile links added: GitHub (habeebc84-create), portfolio repo, tripplanner repo, Unstop (habeec96039), Instagram (@c_habeeb_12)
+- [ ] Professional email
 - [ ] Latest resume PDF
 - [ ] Per-project live demo and source-code links (only verified ones)
 - [ ] CGPA / expected graduation details, if you want them shown

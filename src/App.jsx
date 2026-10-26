@@ -137,6 +137,7 @@ export default function App() {
             <a href="#about" className="hover:text-white">About</a>
             <a href="#skills" className="hover:text-white">Skills</a>
             <a href="#projects" className="hover:text-white">Projects</a>
+            <a href="#achievements" className="hover:text-white">Achievements</a>
             <a href="#hackathons" className="hover:text-white">Hackathons</a>
             <a href="#contact" className="hover:text-white">Contact</a>
           </div>
@@ -234,6 +235,43 @@ export default function App() {
         </div>
       </Section>
 
+      <Section id="achievements" kicker="Achievements" title="Achievements & profiles">
+        <p data-reveal className="-mt-4 max-w-2xl text-slate-400">Built from verified records only. I could not find a public LinkedIn profile for C. Habeeb by searching the web or your mailbox, so no LinkedIn-only achievement is claimed here — paste your LinkedIn URL and I will add those items verbatim.</p>
+        <div className="mt-8 grid gap-5 md:grid-cols-2">
+          <div data-reveal className="glass rounded-3xl p-7">
+            <h3 className="font-display text-lg font-bold">Shipped products</h3>
+            <ul className="mt-4 space-y-3 text-slate-300">
+              <li>• <strong>Karnataka Yatra AI</strong> — AI travel planner for Karnataka, built and pushed to GitHub (34 destinations, day-wise plans, cost breakdown, trilingual UI).</li>
+              <li>• <strong>HSN Cement &amp; Steel</strong> — client e-commerce app for cement &amp; steel, shipped and verified live on Vercel.</li>
+              <li>• <strong>CodeSentinel AI</strong> — Next.js SaaS site (12 static pages), built and deployed.</li>
+            </ul>
+          </div>
+          <div data-reveal className="glass rounded-3xl p-7">
+            <h3 className="font-display text-lg font-bold">Hackathons &amp; competitions</h3>
+            <ul className="mt-4 space-y-3 text-slate-300">
+              <li>• Kannada Digital Innovation Hackathon 2026 — project submitted successfully.</li>
+              <li>• Omnikon National Hackathon 2026 — participation listed.</li>
+              <li>• NeuralMorphix HackForge 2026 — participation listed.</li>
+              <li>• Buildathon 2026 — participation listed.</li>
+              <li>• OOSC 4.0 Hackathon — participation listed.</li>
+              <li>• TVS Credit E.P.I.C 8.0 — IT track (per Unstop record).</li>
+            </ul>
+            <p className="mt-4 text-sm text-slate-500">Participation only — no win is claimed for any of these unless you confirm an award.</p>
+          </div>
+        </div>
+        <div data-reveal className="glass mt-5 rounded-3xl p-7">
+          <h3 className="font-display text-lg font-bold">All profile links</h3>
+          <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            <a href="https://github.com/habeebc84-create" target="_blank" rel="noreferrer" className="rounded-2xl bg-white/5 px-4 py-3 ring-1 ring-white/10 hover:bg-white/10"><span className="font-semibold">GitHub</span><span className="block break-all text-sm text-slate-400">github.com/habeebc84-create</span></a>
+            <a href="https://github.com/habeebc84-create/portfolio" target="_blank" rel="noreferrer" className="rounded-2xl bg-white/5 px-4 py-3 ring-1 ring-white/10 hover:bg-white/10"><span className="font-semibold">This portfolio — GitHub</span><span className="block break-all text-sm text-slate-400">github.com/habeebc84-create/portfolio</span></a>
+            <a href="https://github.com/habeebc84-create/tripplanner" target="_blank" rel="noreferrer" className="rounded-2xl bg-white/5 px-4 py-3 ring-1 ring-white/10 hover:bg-white/10"><span className="font-semibold">Karnataka Yatra AI — GitHub</span><span className="block break-all text-sm text-slate-400">github.com/habeebc84-create/tripplanner</span></a>
+            <a href="https://unstop.com/u/habeec96039" target="_blank" rel="noreferrer" className="rounded-2xl bg-white/5 px-4 py-3 ring-1 ring-white/10 hover:bg-white/10"><span className="font-semibold">Unstop</span><span className="block break-all text-sm text-slate-400">unstop.com/u/habeec96039</span></a>
+            <a href="https://instagram.com/c_habeeb_12" target="_blank" rel="noreferrer" className="rounded-2xl bg-white/5 px-4 py-3 ring-1 ring-white/10 hover:bg-white/10"><span className="font-semibold">Instagram</span><span className="block break-all text-sm text-slate-400">@c_habeeb_12</span></a>
+            <div className="rounded-2xl bg-white/5 px-4 py-3 ring-1 ring-white/10"><span className="font-semibold">LinkedIn</span><span className="block text-sm text-slate-400">Not found publicly — add your URL here.</span></div>
+          </div>
+        </div>
+      </Section>
+
       <Section id="hackathons" kicker="Hackathons & strengths" title="Hackathons, strengths, certificates">
         <div className="grid gap-5 md:grid-cols-2">
           <div data-reveal className="glass rounded-3xl p-7">
@@ -263,10 +301,10 @@ export default function App() {
             <h3 className="font-display font-bold">GitHub</h3>
             <p className="mt-2 break-all text-slate-400">{GITHUB}</p>
           </a>
-          <div data-reveal className="glass rounded-3xl p-7">
-            <h3 className="font-display font-bold">LinkedIn</h3>
-            <p className="mt-2 text-slate-400">Add your verified LinkedIn URL here before publishing.</p>
-          </div>
+          <a data-reveal href="#achievements" className="glass rounded-3xl p-7 transition hover:border-cyan-400/40">
+            <h3 className="font-display font-bold">All profiles</h3>
+            <p className="mt-2 text-slate-400">GitHub, Unstop, Instagram and project repos are listed in Achievements. LinkedIn is still to add — I could not find it publicly.</p>
+          </a>
           <div data-reveal className="glass rounded-3xl p-7">
             <h3 className="font-display font-bold">Email &amp; Resume</h3>
             <p className="mt-2 text-slate-400">Add your professional email and latest resume PDF here before publishing.</p>

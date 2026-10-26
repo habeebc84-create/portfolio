@@ -255,6 +255,7 @@ export default function App() {
               <li>• Buildathon 2026 — participation listed.</li>
               <li>• OOSC 4.0 Hackathon — participation listed.</li>
               <li>• TVS Credit E.P.I.C 8.0 — IT track (per Unstop record).</li>
+              <li>• ProduScope 2026: The Product Case Study Competition — Certificate of Participation (Unstop, 25 Oct 2026).</li>
             </ul>
             <p className="mt-4 text-sm text-slate-500">Participation only — no win is claimed for any of these unless you confirm an award.</p>
           </div>

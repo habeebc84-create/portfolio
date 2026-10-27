@@ -24,6 +24,7 @@ const projects = [
     status: 'Built',
     desc: 'An AI-powered travel planner that generates personalised, day-wise itineraries across Karnataka from interests, budget, trip duration and destination preferences — with route guidance, estimated expenses and accommodation suggestions.',
     tech: ['React', 'TypeScript', 'Tailwind CSS', 'AI integration', 'Mapping', 'Weather APIs'],
+    repo: 'https://github.com/habeebc84-create/tripplanner',
   },
   {
     name: 'HSN Cement & Steel',
@@ -31,6 +32,24 @@ const projects = [
     status: 'Built',
     desc: 'A construction-material commerce platform for cement and steel products, with a product catalogue, dynamic pricing, brand-priority management, admin controls, order workflow and invoice generation.',
     tech: ['React', 'JavaScript / TypeScript', 'Tailwind CSS', 'Backend & database', 'Deployment'],
+    repo: 'https://github.com/habeebc84-create/2027',
+  },
+  {
+    name: 'CodeSentinel AI',
+    tag: 'AI · Code Review · SaaS',
+    status: 'Built',
+    desc: 'AI-powered code review and vulnerability detection platform — a Next.js 15 marketing site with a static dashboard preview, covering features, how it works, pricing, docs and blog.',
+    tech: ['Next.js 15', 'TypeScript', 'Tailwind CSS', 'Framer Motion', 'Recharts'],
+    repo: 'https://github.com/habeebc84-create/ai-powerd-check',
+    demo: 'https://ai-powerd-check.vercel.app',
+  },
+  {
+    name: 'Swagath Multicuisine Restaurant',
+    tag: 'Web · Restaurant',
+    status: 'Built',
+    desc: 'Official website for Swagath Multicuisine Restaurant, Kalikiri, Andhra Pradesh — full menu, Rayalaseema cuisine, tandoori and Hyderabadi dum biryani, catering and bulk orders, bookings, gallery and staff admin.',
+    tech: ['Node.js', 'Static website', 'Vercel'],
+    repo: 'https://github.com/habeebc84-create/swagath',
   },
   {
     name: 'Smart Weather Dashboard & Rainfall Prediction',
@@ -62,10 +81,11 @@ const projects = [
   },
   {
     name: 'ReturnRoute — Return-Trip Matching',
-    tag: 'Smart Mobility · Full-Stack',
-    status: 'Concept',
-    desc: 'A mobility concept matching return journeys for passengers and parcels across local and intercity routes, to improve vehicle utilisation and help users discover suitable return-trip options.',
-    tech: ['React', 'TypeScript', 'Backend APIs', 'Database', 'Mapping'],
+    tag: 'Smart Mobility · Android',
+    status: 'Built',
+    desc: 'Three separately installable Android apps from shared code — Passenger, Rider/Driver and Admin — for matching return journeys for passengers and parcels, with Firebase Google, phone and email sign-in.',
+    tech: ['Kotlin', 'Android', 'Firebase Auth'],
+    repo: 'https://github.com/habeebc84-create/return-route',
   },
 ]
 
@@ -195,7 +215,7 @@ export default function App() {
         <div className="orb orb-a left-[-10%] top-[-10%] h-96 w-96 bg-cyan-500" />
         <div className="orb orb-b right-[-5%] top-[30%] h-80 w-80 bg-violet-500" />
         <div className="relative mx-auto max-w-6xl px-5 sm:px-8">
-          <p className="hero-in text-sm font-semibold uppercase tracking-[0.25em] text-cyan-300">AI &amp; ML Developer · Portfolio</p>
+          <p className="hero-in text-sm font-semibold uppercase tracking-[0.25em] text-cyan-300">AI &amp; ML Developer · Portfolio · Open to internships</p>
           <h1 className="hero-in mt-5 font-display text-5xl font-bold leading-[1.05] sm:text-7xl">
             C. Habeeb
           </h1>
@@ -215,7 +235,7 @@ export default function App() {
             <div className="glass float-slow rounded-2xl p-4"><p data-count="13" className="font-display text-2xl font-bold">0</p><p className="mt-1 text-xs text-slate-400">Certificates listed</p></div>
             <div className="glass float-slow rounded-2xl p-4"><p data-count="1" className="font-display text-2xl font-bold">0</p><p className="mt-1 text-xs text-slate-400">Hackathon win</p></div>
             <div className="glass float-slow rounded-2xl p-4"><p data-count="3" className="font-display text-2xl font-bold">0</p><p className="mt-1 text-xs text-slate-400">Shipped products</p></div>
-            <div className="glass float-slow rounded-2xl p-4"><p data-count="7" className="font-display text-2xl font-bold">0</p><p className="mt-1 text-xs text-slate-400">Featured projects</p></div>
+            <div className="glass float-slow rounded-2xl p-4"><p data-count="9" className="font-display text-2xl font-bold">0</p><p className="mt-1 text-xs text-slate-400">Featured projects</p></div>
           </div>
           <p className="hero-in mt-6 text-sm text-slate-500">Scroll ↓ — every section animates in, cards lift on hover, and the bar at the very top tracks your scroll.</p>
           <div className="scroll-hint mt-4 text-2xl text-cyan-300">↓</div>
@@ -278,7 +298,7 @@ export default function App() {
       </Section>
 
       <Section id="projects" kicker="Featured projects" title="Projects — built, and concepts in progress">
-        <p data-reveal className="-mt-4 max-w-2xl text-slate-400">Status is labelled honestly: “Built” only where a working product exists, “Concept” where the spec itself describes a proposed idea. No demo or repository link is shown unless it is verified — add those links per project before publishing.</p>
+        <p data-reveal className="-mt-4 max-w-2xl text-slate-400">Status is labelled honestly: “Built” only where a working product exists, “Concept” where the idea is still proposed. Every source and live link below was fetched from my actual GitHub repos — nothing is linked unless that repo exists.</p>
         <div className="mt-8 grid gap-5 md:grid-cols-2">
           {projects.map((p) => (
             <article key={p.name} data-reveal className="glass card-glow group rounded-3xl p-7">
@@ -293,6 +313,12 @@ export default function App() {
                   <span key={t} className="rounded-full bg-white/5 px-3 py-1 text-xs text-slate-300 ring-1 ring-white/10">{t}</span>
                 ))}
               </div>
+              {(p.repo || p.demo) && (
+                <div className="mt-6 flex flex-wrap gap-3">
+                  {p.repo && <a href={p.repo} target="_blank" rel="noreferrer" className="rounded-full bg-white/10 px-4 py-2 text-sm font-semibold hover:bg-white/20">View source →</a>}
+                  {p.demo && <a href={p.demo} target="_blank" rel="noreferrer" className="rounded-full bg-cyan-400 px-4 py-2 text-sm font-semibold text-slate-950 hover:bg-cyan-300">Live site →</a>}
+                </div>
+              )}
             </article>
           ))}
         </div>
@@ -307,7 +333,7 @@ export default function App() {
       </Section>
 
       <Section id="achievements" kicker="Achievements" title="Achievements & profiles">
-        <p data-reveal className="-mt-4 max-w-2xl text-slate-400">Built from verified records only. LinkedIn's page blocked both a direct read and a live-browser check (sign-in wall only), so no LinkedIn-only achievement is claimed here — paste or screenshot those items and they will be added verbatim.</p>
+        <p data-reveal className="-mt-4 max-w-2xl text-slate-400">Built from verified records only — shipped products, hackathons and certificates below are all named, dated and sourced, not claimed in general terms.</p>
         <div className="mt-8 grid gap-5 md:grid-cols-2">
           <div data-reveal className="glass rounded-3xl p-7">
             <h3 className="font-display text-lg font-bold">Shipped products</h3>
@@ -394,10 +420,9 @@ export default function App() {
           <div data-reveal className="glass rounded-3xl p-7">
             <h3 className="font-display font-bold">Email &amp; Resume</h3>
             <p className="mt-2 break-all text-slate-400"><a href="mailto:habeebc84@gmail.com" className="text-cyan-300 hover:text-cyan-200">habeebc84@gmail.com</a></p>
-            <p className="mt-2 text-slate-400">Add your latest resume PDF here before publishing.</p>
+            <p className="mt-2 text-slate-400">For opportunities, internships and collaborations — email me and I will share my latest resume.</p>
           </div>
         </div>
-        <p data-reveal className="mt-8 text-sm text-slate-500">Draft note: this site intentionally leaves LinkedIn, email, resume, project demo/source links, CGPA and certificate verification links as to-fill items — see README.md — rather than inventing them.</p>
       </Section>
 
       <footer className="border-t border-white/10 py-8 text-center text-sm text-slate-500">

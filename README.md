@@ -27,7 +27,7 @@ Import this repo on Vercel with the Vite preset, or publish with GitHub Pages fr
 ## Finished on 2026-10-27 — fetched from Habeeb's real GitHub repos
 - [x] LinkedIn URL: https://www.linkedin.com/in/habeeb-c-727a34385/
 - [x] Profile links: GitHub (habeebc84-create), portfolio repo, tripplanner repo, Unstop (habeec96039), Instagram (@c_habeeb_12), LinkedIn
-- [x] Professional email: habeebc84@gmail.com
+- [x] Professional email: habeeb.c84@gmail.com
 - [x] Project source links, fetched and verified 2026-10-27: Karnataka Yatra AI → tripplanner, HSN Cement & Steel → 2027, CodeSentinel AI → ai-powerd-check (live: https://ai-powerd-check.vercel.app), ReturnRoute → return-route, Swagath → swagath
 - [x] 13 certificates listed by exact title, issuer and month (supplied by Habeeb 2026-10-26)
 - [ ] Still open, not invented: the 14th certificate, which event is the 1 hackathon win, resume PDF, CGPA, certificate verification URLs

@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Lenis from 'lenis'
@@ -101,7 +101,7 @@ const exploring = [
 
 const hackathons = [
   'Omnikon National Hackathon 2026',
-  'NeuralMorphix HackForge 2026',
+  'NeuraMorphix HackForge 2026',
   'Buildathon 2026',
   'OOSC 4.0 Hackathon',
 ]
@@ -137,7 +137,7 @@ const strengths = [
 
 function Section({ id, kicker, title, children }) {
   return (
-    <section id={id} className="relative mx-auto max-w-6xl px-5 py-20 sm:px-8 sm:py-24">
+    <section id={id} className="relative mx-auto max-w-6xl scroll-mt-24 px-5 py-20 sm:px-8 sm:py-24">
       <p data-reveal className="text-xs font-semibold uppercase tracking-[0.25em] text-cyan-300">{kicker}</p>
       <h2 data-reveal className="mt-3 font-display text-3xl font-bold sm:text-4xl">{title}</h2>
       <div className="mt-10">{children}</div>
@@ -146,12 +146,24 @@ function Section({ id, kicker, title, children }) {
 }
 
 export default function App() {
+  const [menuOpen, setMenuOpen] = useState(false)
   useEffect(() => {
     const lenis = new Lenis({ lerp: 0.1, smoothWheel: true })
     let rafId
     const raf = (time) => { lenis.raf(time); rafId = requestAnimationFrame(raf) }
     rafId = requestAnimationFrame(raf)
     lenis.on('scroll', ScrollTrigger.update)
+    // Fix: Lenis takes over scrolling, so plain #anchor jumps did not scroll
+    // reliably. Route every in-page link through Lenis instead.
+    const anchorHandler = (e) => {
+      const link = e.target.closest('a[href^="#"]')
+      if (!link) return
+      const target = document.querySelector(link.getAttribute('href'))
+      if (!target) return
+      e.preventDefault()
+      lenis.scrollTo(target, { offset: -80, duration: 1.2 })
+    }
+    document.addEventListener('click', anchorHandler)
 
     const ctx = gsap.context(() => {
       gsap.from('.hero-in', { y: 40, opacity: 0, duration: 1, ease: 'power3.out', stagger: 0.12 })
@@ -189,7 +201,7 @@ export default function App() {
         window.addEventListener('mousemove', (e) => { xTo(e.clientX - 200); yTo(e.clientY - 200) })
       }
     })
-    return () => { cancelAnimationFrame(rafId); lenis.destroy(); ctx.revert() }
+    return () => { document.removeEventListener('click', anchorHandler); cancelAnimationFrame(rafId); lenis.destroy(); ctx.revert() }
   }, [])
 
   return (
@@ -208,7 +220,17 @@ export default function App() {
             <a href="#contact" className="hover:text-white">Contact</a>
           </div>
           <a href={GITHUB} target="_blank" rel="noreferrer" className="rounded-full bg-cyan-400 px-4 py-2 text-sm font-semibold text-slate-950 hover:bg-cyan-300">GitHub</a>
+          <button onClick={() => setMenuOpen(!menuOpen)} aria-label="Toggle menu" className="glass rounded-full px-4 py-2 text-sm font-semibold md:hidden">☰ Menu</button>
         </div>
+        {menuOpen && (
+          <div className="mx-auto max-w-6xl px-5 sm:px-8 md:hidden">
+            <div className="glass flex flex-col gap-3 rounded-3xl px-5 py-4 text-sm text-slate-200">
+              {[['#about', 'About'], ['#skills', 'Skills'], ['#projects', 'Projects'], ['#achievements', 'Achievements'], ['#hackathons', 'Hackathons'], ['#contact', 'Contact']].map(([href, label]) => (
+                <a key={href} href={href} onClick={() => setMenuOpen(false)} className="hover:text-white">{label}</a>
+              ))}
+            </div>
+          </div>
+        )}
       </nav>
 
       <header id="home" className="relative overflow-hidden pt-36 pb-24 sm:pt-44">
@@ -233,7 +255,7 @@ export default function App() {
           </div>
           <div className="hero-in mt-12 grid max-w-3xl grid-cols-2 gap-4 text-center sm:grid-cols-4">
             <div className="glass float-slow rounded-2xl p-4"><p data-count="13" className="font-display text-2xl font-bold">0</p><p className="mt-1 text-xs text-slate-400">Certificates listed</p></div>
-            <div className="glass float-slow rounded-2xl p-4"><p data-count="1" className="font-display text-2xl font-bold">0</p><p className="mt-1 text-xs text-slate-400">Hackathon win</p></div>
+            <div className="glass float-slow rounded-2xl p-4"><p data-count="1" className="font-display text-2xl font-bold">0</p><p className="mt-1 text-xs text-slate-400">Hackathon win (to confirm)</p></div>
             <div className="glass float-slow rounded-2xl p-4"><p data-count="3" className="font-display text-2xl font-bold">0</p><p className="mt-1 text-xs text-slate-400">Shipped products</p></div>
             <div className="glass float-slow rounded-2xl p-4"><p data-count="9" className="font-display text-2xl font-bold">0</p><p className="mt-1 text-xs text-slate-400">Featured projects</p></div>
           </div>
@@ -274,8 +296,8 @@ export default function App() {
             <defs>
               <path id="skill-circle" d="M100,100 m-78,0 a78,78 0 1,1 156,0 a78,78 0 1,1 -156,0" />
             </defs>
-            <text className="fill-cyan-300" style={{ fontSize: '13px', letterSpacing: '3px', fontWeight: 600 }}>
-              <textPath href="#skill-circle">PYTHON • REACT • AI / ML • TAILWIND • NODE.JS • NEXT.JS •</textPath>
+            <text className="fill-cyan-300" style={{ fontSize: '12px', letterSpacing: '2px', fontWeight: 600 }}>
+              <textPath href="#skill-circle">PYTHON • REACT • AI/ML • TAILWIND • NODE • NEXT •</textPath>
             </text>
           </svg>
           <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
@@ -348,7 +370,7 @@ export default function App() {
             <ul className="mt-4 space-y-3 text-slate-300">
               <li>• Kannada Digital Innovation Hackathon 2026 — project submitted successfully.</li>
               <li>• Omnikon National Hackathon 2026 — participation listed.</li>
-              <li>• NeuralMorphix HackForge 2026 — participation listed.</li>
+              <li>• NeuraMorphix HackForge 2026 — participation listed.</li>
               <li>• Buildathon 2026 — participation listed.</li>
               <li>• OOSC 4.0 Hackathon — participation listed.</li>
               <li>• TVS Credit E.P.I.C 8.0 — IT track (per Unstop record).</li>
@@ -366,7 +388,7 @@ export default function App() {
             <a href="https://unstop.com/u/habeec96039" target="_blank" rel="noreferrer" className="rounded-2xl bg-white/5 px-4 py-3 ring-1 ring-white/10 hover:bg-white/10"><span className="font-semibold">Unstop</span><span className="block break-all text-sm text-slate-400">unstop.com/u/habeec96039</span></a>
             <a href="https://instagram.com/c_habeeb_12" target="_blank" rel="noreferrer" className="rounded-2xl bg-white/5 px-4 py-3 ring-1 ring-white/10 hover:bg-white/10"><span className="font-semibold">Instagram</span><span className="block break-all text-sm text-slate-400">@c_habeeb_12</span></a>
             <a href="https://www.linkedin.com/in/habeeb-c-727a34385/" target="_blank" rel="noreferrer" className="rounded-2xl bg-white/5 px-4 py-3 ring-1 ring-white/10 hover:bg-white/10"><span className="font-semibold">LinkedIn</span><span className="block break-all text-sm text-slate-400">linkedin.com/in/habeeb-c-727a34385</span></a>
-            <a href="mailto:habeebc84@gmail.com" className="rounded-2xl bg-white/5 px-4 py-3 ring-1 ring-white/10 hover:bg-white/10"><span className="font-semibold">Email</span><span className="block break-all text-sm text-slate-400">habeebc84@gmail.com</span></a>
+            <a href="mailto:habeeb.c84@gmail.com" className="rounded-2xl bg-white/5 px-4 py-3 ring-1 ring-white/10 hover:bg-white/10"><span className="font-semibold">Email</span><span className="block break-all text-sm text-slate-400">habeeb.c84@gmail.com</span></a>
           </div>
         </div>
       </Section>
@@ -419,7 +441,7 @@ export default function App() {
           </a>
           <div data-reveal className="glass rounded-3xl p-7">
             <h3 className="font-display font-bold">Email &amp; Resume</h3>
-            <p className="mt-2 break-all text-slate-400"><a href="mailto:habeebc84@gmail.com" className="text-cyan-300 hover:text-cyan-200">habeebc84@gmail.com</a></p>
+            <p className="mt-2 break-all text-slate-400"><a href="mailto:habeeb.c84@gmail.com" className="text-cyan-300 hover:text-cyan-200">habeeb.c84@gmail.com</a></p>
             <p className="mt-2 text-slate-400">For opportunities, internships and collaborations — email me and I will share my latest resume.</p>
           </div>
         </div>

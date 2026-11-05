@@ -8,6 +8,7 @@ Dark, glassmorphism portfolio built with React + Vite, Tailwind CSS, GSAP + Scro
 - Background: #070b14 · Text: #e6edf7 · Accent: cyan #22d3ee + violet #a78bfa (used sparingly)
 - Typography: Space Grotesk for headings, Inter for body
 - Motion: Lenis smooth scroll, GSAP fade-up on scroll entry, gentle floating hero orbs, hover lift on project cards
+- Entry: a splash page (letter-by-letter name, neural-dot particles, Enter Portfolio button) shows before the portfolio; section deep links such as #projects skip it
 - Responsive: mobile-first, 375px / 768px / 1024px / 1440px
 
 ## Run locally

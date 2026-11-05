@@ -87,6 +87,11 @@ body {
   will-change: transform, opacity;
 }
 
+.splash-letter {
+  display: inline-block;
+  will-change: transform, opacity;
+}
+
 .role-dot {
   display: inline-block;
   height: 0.6rem;

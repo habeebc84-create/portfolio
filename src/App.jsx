@@ -286,7 +286,94 @@ function Section({ id, kicker, title, children }) {
   )
 }
 
-export default function App() {
+/**
+ * Splash entry page, shown before the portfolio itself.
+ * One clear action — Enter Portfolio — plus the real GitHub / LinkedIn
+ * links. The portfolio is a separate component and mounts only after
+ * Enter, so its Lenis / GSAP setup always runs on visible content.
+ * Hooks order is the same on every render of each component (the HSN
+ * splash once broke exactly by running fewer hooks before its exit).
+ */
+function Splash({ onEnter }) {
+  const rootRef = useRef(null)
+  const buttonRef = useRef(null)
+  const [leaving, setLeaving] = useState(false)
+
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined
+    const ctx = gsap.context(() => {
+      gsap.from('.splash-letter', {
+        y: 80, opacity: 0, rotateX: -50, duration: 0.9, ease: 'power3.out', stagger: 0.055,
+      })
+      gsap.from('.splash-in', { y: 30, opacity: 0, duration: 0.9, ease: 'power3.out', stagger: 0.1, delay: 0.35 })
+    }, rootRef)
+    return () => ctx.revert()
+  }, [])
+
+  const enter = () => {
+    if (leaving) return
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      onEnter()
+      return
+    }
+    setLeaving(true)
+    gsap.to(rootRef.current, {
+      opacity: 0, scale: 0.98, y: -20, duration: 0.45, ease: 'power2.in', onComplete: onEnter,
+    })
+  }
+
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.key !== 'Enter') return
+      const active = document.activeElement
+      if (active === document.body || active === buttonRef.current) enter()
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [leaving])
+
+  const letters = 'C. Habeeb'.split('')
+
+  return (
+    <div ref={rootRef} className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-[#070b14] px-5 py-16 text-center">
+      <HeroParticles />
+      <div className="float-slow absolute left-[-10%] top-[-10%] h-96 w-96 rounded-full bg-cyan-500 opacity-30 blur-[70px]" aria-hidden="true" />
+      <div className="float-slow absolute bottom-[-15%] right-[-5%] h-80 w-80 rounded-full bg-violet-500 opacity-30 blur-[70px]" aria-hidden="true" />
+      <div className="relative">
+        <p className="splash-in text-xs font-semibold uppercase tracking-[0.3em] text-cyan-300">Portfolio · 2026</p>
+        <h1 aria-label="C. Habeeb" className="mt-6 font-display text-6xl font-bold leading-none sm:text-8xl">
+          {letters.map((ch, i) => (
+            <span key={i} aria-hidden="true" className="splash-letter">{ch === ' ' ? '\u00a0' : ch}</span>
+          ))}
+        </h1>
+        <p className="splash-in mt-4 text-lg font-semibold text-cyan-200 sm:text-xl">AI &amp; ML Developer</p>
+        <p className="splash-in mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-400">
+          Building Intelligent Solutions with AI, Machine Learning &amp; Modern Web Technologies
+        </p>
+        <div className="splash-in mt-10">
+          <button
+            ref={buttonRef}
+            autoFocus
+            onClick={enter}
+            className="rounded-full bg-cyan-400 px-8 py-4 text-base font-semibold text-slate-950 shadow-lg shadow-cyan-500/25 transition hover:scale-[1.03] hover:bg-cyan-300 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cyan-300"
+          >
+            Enter Portfolio →
+          </button>
+          <p className="mt-4 text-sm text-slate-500">or press Enter</p>
+        </div>
+        <div className="splash-in mt-10 flex items-center justify-center gap-6 text-sm font-semibold">
+          <a href={GITHUB} target="_blank" rel="noreferrer" className="text-slate-300 hover:text-white">GitHub</a>
+          <a href="https://www.linkedin.com/in/habeeb-c-727a34385/" target="_blank" rel="noreferrer" className="text-slate-300 hover:text-white">LinkedIn</a>
+          <a href="mailto:habeeb.c84@gmail.com" className="text-slate-300 hover:text-white">Email</a>
+        </div>
+        <p className="splash-in mt-12 text-xs text-slate-600">© 2026 C. Habeeb · Saveetha School of Engineering</p>
+      </div>
+    </div>
+  )
+}
+
+function Portfolio() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [roleIndex, setRoleIndex] = useState(0)
 
@@ -705,4 +792,14 @@ export default function App() {
       </footer>
     </div>
   )
+}
+
+export default function App() {
+  // A section deep link (for example #projects) skips the splash so shared
+  // links still land on the right section. The plain portfolio link shows it.
+  const [entered, setEntered] = useState(
+    () => typeof window !== 'undefined' && window.location.hash.length > 1,
+  )
+  if (entered) return <Portfolio />
+  return <Splash onEnter={() => setEntered(true)} />
 }

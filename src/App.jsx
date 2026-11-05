@@ -276,11 +276,15 @@ function HeroParticles() {
   return <canvas ref={canvasRef} aria-hidden="true" className="particle-canvas" />
 }
 
-function Section({ id, kicker, title, children }) {
+function Section({ id, index, kicker, title, children }) {
   return (
     <section id={id} className="relative mx-auto max-w-6xl scroll-mt-24 px-5 py-20 sm:px-8 sm:py-24">
-      <p data-reveal className="text-xs font-semibold uppercase tracking-[0.25em] text-cyan-300">{kicker}</p>
-      <h2 data-reveal className="mt-3 font-display text-3xl font-bold sm:text-4xl">{title}</h2>
+      <div data-reveal className="flex items-center gap-4">
+        <span className="font-display text-sm font-bold tracking-widest text-cyan-300/70">{index}</span>
+        <span className="h-px w-12 bg-gradient-to-r from-cyan-400 to-transparent" aria-hidden="true" />
+        <p className="text-xs font-semibold uppercase tracking-[0.25em] text-cyan-300">{kicker}</p>
+      </div>
+      <h2 data-reveal className="mt-4 font-display text-3xl font-bold tracking-tight sm:text-5xl">{title}</h2>
       <div className="mt-10">{children}</div>
     </section>
   )
@@ -401,7 +405,12 @@ function Portfolio() {
     let rafId
     const raf = (time) => { lenis.raf(time); rafId = requestAnimationFrame(raf) }
     rafId = requestAnimationFrame(raf)
-    lenis.on('scroll', ScrollTrigger.update)
+    const nav = document.querySelector('.nav-shell')
+    const onLenisScroll = (e) => {
+      ScrollTrigger.update()
+      if (nav) nav.classList.toggle('nav-scrolled', (e?.scroll ?? 0) > 40)
+    }
+    lenis.on('scroll', onLenisScroll)
 
     // Lenis takes over scrolling, so plain #anchor jumps did not scroll
     // reliably. Route every in-page link through Lenis instead.
@@ -425,6 +434,35 @@ function Portfolio() {
       glowYTo = gsap.quickTo(glow, 'y', { duration: 0.6, ease: 'power3' })
       glowHandler = (e) => { glowXTo(e.clientX - 200); glowYTo(e.clientY - 200) }
       window.addEventListener('mousemove', glowHandler)
+    }
+
+    // Custom cursor: dot follows fast, ring trails and grows over
+    // links, buttons and tilt cards (desktop, fine pointer only).
+    const cursorCleanups = []
+    if (finePointer) {
+      const dot = document.querySelector('.cursor-dot')
+      const ring = document.querySelector('.cursor-ring')
+      if (dot && ring) {
+        const dotX = gsap.quickTo(dot, 'x', { duration: 0.15, ease: 'power3' })
+        const dotY = gsap.quickTo(dot, 'y', { duration: 0.15, ease: 'power3' })
+        const ringX = gsap.quickTo(ring, 'x', { duration: 0.45, ease: 'power3' })
+        const ringY = gsap.quickTo(ring, 'y', { duration: 0.45, ease: 'power3' })
+        const onMove = (e) => {
+          dot.style.opacity = '1'
+          ring.style.opacity = '1'
+          dotX(e.clientX - 4); dotY(e.clientY - 4); ringX(e.clientX - 19); ringY(e.clientY - 19)
+        }
+        const onOver = (e) => { if (e.target.closest('a, button, [data-tilt]')) ring.classList.add('cursor-active') }
+        const onOut = (e) => { if (e.target.closest('a, button, [data-tilt]')) ring.classList.remove('cursor-active') }
+        window.addEventListener('mousemove', onMove)
+        document.addEventListener('mouseover', onOver)
+        document.addEventListener('mouseout', onOut)
+        cursorCleanups.push(
+          () => window.removeEventListener('mousemove', onMove),
+          () => document.removeEventListener('mouseover', onOver),
+          () => document.removeEventListener('mouseout', onOut),
+        )
+      }
     }
 
     // Magnetic primary buttons (desktop, fine pointer only).
@@ -482,6 +520,7 @@ function Portfolio() {
       // now — that was the old bug, both tweens targeted .orb-a / .orb-b.
       gsap.to('.orb-a', { y: 60, duration: 6, ease: 'sine.inOut', yoyo: true, repeat: -1 })
       gsap.to('.orb-b', { y: -50, x: 30, duration: 7, ease: 'sine.inOut', yoyo: true, repeat: -1 })
+      gsap.to('.hero-bg-word', { yPercent: 45, ease: 'none', scrollTrigger: { trigger: '#home', start: 'top top', end: 'bottom top', scrub: true } })
       gsap.to('.orb-wrap-a', { yPercent: 30, ease: 'none', scrollTrigger: { trigger: '#home', start: 'top top', end: 'bottom top', scrub: true } })
       gsap.to('.orb-wrap-b', { yPercent: -20, ease: 'none', scrollTrigger: { trigger: '#home', start: 'top top', end: 'bottom top', scrub: true } })
 
@@ -519,6 +558,7 @@ function Portfolio() {
       window.removeEventListener('load', onLoad)
       window.clearTimeout(refreshTimer)
       if (glowHandler) window.removeEventListener('mousemove', glowHandler)
+      cursorCleanups.forEach((fn) => fn())
       magneticCleanups.forEach((fn) => fn())
       tiltCleanups.forEach((fn) => fn())
       cancelAnimationFrame(rafId)
@@ -531,9 +571,12 @@ function Portfolio() {
 
   return (
     <div className="relative min-h-screen overflow-x-clip bg-[#070b14]">
+      <div className="noise-overlay" aria-hidden="true" />
+      <div className="cursor-dot" aria-hidden="true" />
+      <div className="cursor-ring" aria-hidden="true" />
       <div className="scroll-progress fixed inset-x-0 top-0 z-[60] h-1 origin-left scale-x-0 bg-gradient-to-r from-cyan-400 via-violet-400 to-pink-400" />
       <div className="cursor-glow pointer-events-none fixed left-0 top-0 z-0 hidden h-[400px] w-[400px] rounded-full bg-cyan-500/10 blur-[100px] md:block" />
-      <nav className="fixed inset-x-0 top-0 z-50">
+      <nav className="nav-shell fixed inset-x-0 top-0 z-50">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-4 sm:px-8">
           <a href="#home" className="glass rounded-full px-4 py-2 font-display text-sm font-bold">C. HABEEB</a>
           <div className="glass hidden items-center gap-5 rounded-full px-5 py-2 text-sm text-slate-300 md:flex">
@@ -560,6 +603,7 @@ function Portfolio() {
 
       <header id="home" className="relative overflow-hidden pt-36 pb-24 sm:pt-44">
         <HeroParticles />
+        <span className="hero-bg-word" aria-hidden="true">PORTFOLIO</span>
         <div className="orb-wrap-a absolute left-[-10%] top-[-10%] h-96 w-96" aria-hidden="true">
           <div className="orb orb-a h-full w-full bg-cyan-500" />
         </div>
@@ -568,9 +612,9 @@ function Portfolio() {
         </div>
         <div className="relative mx-auto max-w-6xl px-5 sm:px-8">
           <p className="hero-in text-sm font-semibold uppercase tracking-[0.25em] text-cyan-300">AI &amp; ML Developer · Portfolio · Open to internships</p>
-          <h1 aria-label="C. Habeeb" className="mt-5 font-display text-5xl font-bold leading-[1.05] sm:text-7xl">
+          <h1 aria-label="C. Habeeb" className="mt-5 font-display text-[clamp(3.75rem,12vw,8.5rem)] font-bold leading-[0.95] tracking-tight">
             {titleLetters.map((ch, i) => (
-              <span key={i} aria-hidden="true" className="hero-letter">{ch === ' ' ? '\u00a0' : ch}</span>
+              <span key={i} aria-hidden="true" className={`hero-letter ${ch === '.' ? 'text-gradient' : ''}`}>{ch === ' ' ? '\u00a0' : ch}</span>
             ))}
           </h1>
           <p className="hero-in mt-4 flex min-h-[1.75rem] items-center gap-2 text-lg font-semibold text-cyan-200 sm:text-xl" aria-live="polite">
@@ -589,11 +633,16 @@ function Portfolio() {
             <a data-magnetic href={GITHUB} target="_blank" rel="noreferrer" className="glass rounded-full px-6 py-3 font-semibold hover:bg-white/10">GitHub Profile</a>
             <a data-magnetic href="#contact" className="glass rounded-full px-6 py-3 font-semibold hover:bg-white/10">Contact</a>
           </div>
-          <div className="hero-in mt-12 grid max-w-3xl grid-cols-2 gap-4 text-center sm:grid-cols-4">
-            <div className="glass float-slow rounded-2xl p-4"><p data-count="13" className="font-display text-2xl font-bold">0</p><p className="mt-1 text-xs text-slate-400">Certificates listed</p></div>
-            <div className="glass float-slow rounded-2xl p-4"><p data-count="5" className="font-display text-2xl font-bold">0</p><p className="mt-1 text-xs text-slate-400">Projects with source</p></div>
-            <div className="glass float-slow rounded-2xl p-4"><p data-count="3" className="font-display text-2xl font-bold">0</p><p className="mt-1 text-xs text-slate-400">Shipped products</p></div>
-            <div className="glass float-slow rounded-2xl p-4"><p data-count="9" className="font-display text-2xl font-bold">0</p><p className="mt-1 text-xs text-slate-400">Featured projects</p></div>
+          <p className="hero-in mt-8 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-slate-400">
+            <span>Chennai, India</span><span className="text-cyan-300" aria-hidden="true">·</span>
+            <span>Saveetha School of Engineering</span><span className="text-cyan-300" aria-hidden="true">·</span>
+            <span className="font-semibold text-cyan-200">Open to internships</span>
+          </p>
+          <div className="hero-in mt-12 grid max-w-3xl grid-cols-2 gap-y-6 border-y border-white/10 py-7 text-center sm:grid-cols-4">
+            <div className="px-4 sm:border-r sm:border-white/10"><p data-count="13" className="font-display text-3xl font-bold sm:text-4xl">0</p><p className="mt-1 text-xs uppercase tracking-widest text-slate-400">Certificates listed</p></div>
+            <div className="px-4 sm:border-r sm:border-white/10"><p data-count="5" className="font-display text-3xl font-bold sm:text-4xl">0</p><p className="mt-1 text-xs uppercase tracking-widest text-slate-400">Projects with source</p></div>
+            <div className="px-4 sm:border-r sm:border-white/10"><p data-count="3" className="font-display text-3xl font-bold sm:text-4xl">0</p><p className="mt-1 text-xs uppercase tracking-widest text-slate-400">Shipped products</p></div>
+            <div className="px-4"><p data-count="9" className="font-display text-3xl font-bold sm:text-4xl">0</p><p className="mt-1 text-xs uppercase tracking-widest text-slate-400">Featured projects</p></div>
           </div>
           <p className="hero-in mt-6 text-sm text-slate-500">Scroll to explore my work.</p>
           <div className="scroll-hint mt-4 text-2xl text-cyan-300" aria-hidden="true">↓</div>
@@ -612,7 +661,7 @@ function Portfolio() {
         </div>
       </div>
 
-      <Section id="about" kicker="About me" title="Turning ideas into practical software">
+      <Section id="about" index="01" kicker="About me" title="Turning ideas into practical software">
         <div className="grid gap-6 md:grid-cols-2">
           <div data-reveal className="glass rounded-3xl p-7 leading-relaxed text-slate-300">
             <p>I am a B.Tech Computer Science Engineering student specialising in Artificial Intelligence and Machine Learning, passionate about developing intelligent applications that solve real-world problems.</p>
@@ -629,7 +678,7 @@ function Portfolio() {
         </div>
       </Section>
 
-      <Section id="skills" kicker="Skills" title="What I work with">
+      <Section id="skills" index="02" kicker="Skills" title="What I work with">
         <p data-reveal className="-mt-4 max-w-2xl text-slate-400">Technologies I have used across my projects — from frontend and backend to AI/ML, data and APIs.</p>
         <div data-reveal className="relative mx-auto mt-10 h-52 w-52">
           <svg viewBox="0 0 200 200" aria-hidden="true" className="spin-slow absolute inset-0 h-full w-full">
@@ -659,16 +708,20 @@ function Portfolio() {
         </div>
       </Section>
 
-      <Section id="projects" kicker="Featured projects" title="Projects — built, and concepts in progress">
+      <Section id="projects" index="03" kicker="Featured projects" title="Projects — built, and concepts in progress">
         <p data-reveal className="-mt-4 max-w-2xl text-slate-400">Status is labelled honestly: “Built” only where a working product exists, “Concept” where the idea is still proposed. Every project links to its real source or live site.</p>
         <div className="mt-8 grid gap-5 md:grid-cols-2">
-          {projects.map((p) => (
-            <article key={p.name} data-reveal data-tilt className="glass card-glow group rounded-3xl p-7">
+          {projects.map((p, i) => (
+            <article key={p.name} data-reveal data-tilt className={`glass card-glow group rounded-3xl p-7 sm:p-8 ${i < 2 ? 'featured-card md:col-span-2' : ''}`}>
               <div className="flex items-start justify-between gap-3">
                 <p className="text-xs font-semibold uppercase tracking-widest text-cyan-300">{p.tag}</p>
-                <span className="shrink-0 rounded-full bg-cyan-400/15 px-3 py-1 text-xs font-semibold text-cyan-200 ring-1 ring-cyan-400/30">{p.status}</span>
+                <span className="flex shrink-0 items-center gap-2">
+                  {i < 2 && <span className="rounded-full bg-gradient-to-r from-cyan-400 to-violet-400 px-3 py-1 text-xs font-bold text-slate-950">Featured</span>}
+                  <span className="rounded-full bg-cyan-400/15 px-3 py-1 text-xs font-semibold text-cyan-200 ring-1 ring-cyan-400/30">{p.status}</span>
+                </span>
               </div>
-              <h3 className="mt-3 font-display text-xl font-bold">{p.name}</h3>
+              <p className="mt-5 font-display text-sm font-bold text-slate-600">{String(i + 1).padStart(2, '0')}</p>
+              <h3 className={`mt-1 font-display font-bold ${i < 2 ? 'text-2xl sm:text-3xl' : 'text-xl'}`}>{p.name}</h3>
               <p className="mt-3 leading-relaxed text-slate-400">{p.desc}</p>
               <div className="mt-5 flex flex-wrap gap-2">
                 {p.tech.map((t) => (
@@ -694,7 +747,7 @@ function Portfolio() {
         </div>
       </Section>
 
-      <Section id="achievements" kicker="Achievements" title="Achievements & profiles">
+      <Section id="achievements" index="04" kicker="Achievements" title="Achievements & profiles">
         <p data-reveal className="-mt-4 max-w-2xl text-slate-400">Built from verified records only — shipped products, hackathons and certificates below are all named, dated and sourced, not claimed in general terms.</p>
         <div className="mt-8 grid gap-5 md:grid-cols-2">
           <div data-reveal className="glass rounded-3xl p-7">
@@ -733,7 +786,7 @@ function Portfolio() {
         </div>
       </Section>
 
-      <Section id="hackathons" kicker="Hackathons & strengths" title="Hackathons, strengths, certificates">
+      <Section id="hackathons" index="05" kicker="Hackathons & strengths" title="Hackathons, strengths, certificates">
         <div className="grid gap-5 md:grid-cols-2">
           <div data-reveal className="glass rounded-3xl p-7">
             <h3 className="font-display text-lg font-bold">Hackathons</h3>
@@ -769,7 +822,7 @@ function Portfolio() {
         </div>
       </Section>
 
-      <Section id="contact" kicker="Contact" title="Let's build something intelligent">
+      <Section id="contact" index="06" kicker="Contact" title="Let's build something intelligent">
         <div className="grid gap-5 md:grid-cols-3">
           <a data-reveal href={GITHUB} target="_blank" rel="noreferrer" className="glass rounded-3xl p-7 transition hover:border-cyan-400/40">
             <h3 className="font-display font-bold">GitHub</h3>
@@ -785,10 +838,17 @@ function Portfolio() {
             <p className="mt-2 text-slate-400">Open to internships and collaborations — get in touch.</p>
           </div>
         </div>
+        <div data-reveal className="mt-14 border-t border-white/10 pt-10 text-center">
+          <p className="text-xs font-semibold uppercase tracking-[0.25em] text-slate-500">Have an idea? Write to me</p>
+          <a href="mailto:habeeb.c84@gmail.com" className="text-gradient mt-4 inline-block break-all font-display text-2xl font-bold sm:text-4xl">habeeb.c84@gmail.com</a>
+        </div>
       </Section>
 
-      <footer className="border-t border-white/10 py-8 text-center text-sm text-slate-500">
-        © 2026 C. Habeeb · Built with React, Vite, Tailwind CSS, GSAP + ScrollTrigger and Lenis
+      <footer className="border-t border-white/10 py-8">
+        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-5 text-sm text-slate-500 sm:flex-row sm:px-8">
+          <p>© 2026 C. Habeeb · Built with React, Vite, Tailwind CSS, GSAP + ScrollTrigger and Lenis</p>
+          <a href="#home" className="font-semibold text-cyan-300 hover:text-cyan-200">Back to top ↑</a>
+        </div>
       </footer>
     </div>
   )

@@ -9,6 +9,7 @@ Dark, glassmorphism portfolio built with React + Vite, Tailwind CSS, GSAP + Scro
 - Typography: Space Grotesk for headings, Inter for body
 - Motion: Lenis smooth scroll, GSAP fade-up on scroll entry, gentle floating hero orbs, hover lift on project cards
 - Entry: a splash page (letter-by-letter name, neural-dot particles, Enter Portfolio button) shows before the portfolio; section deep links such as #projects skip it
+- Premium layer (5 Nov 2026): custom dot + trailing-ring cursor, film-grain overlay, gradient mesh orbs, giant outlined PORTFOLIO backdrop word with scroll parallax, numbered sections, featured showcase for the first two projects, scrolled nav with blur, giant email CTA in the footer
 - Responsive: mobile-first, 375px / 768px / 1024px / 1440px
 
 ## Run locally

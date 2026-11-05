@@ -106,9 +106,7 @@ const hackathons = [
   'OOSC 4.0 Hackathon',
 ]
 
-// Exact list supplied by Habeeb on 2026-10-26 (13 certificates).
-// None of these is labelled a win, so the 1 win is shown separately as
-// "event to confirm" until he names it. Do not upgrade any of these to a win.
+// Certificates issued, by name — 13 listed.
 const certificates = [
   { name: 'ProduScope 2026: The Product Case Study Competition', type: 'Certificate of Participation', date: 'Oct 2026', source: 'Unstop' },
   { name: 'CODEFUSION 2k26', type: 'Certificate of Participation', date: 'Oct 2026', source: 'Unstop' },
@@ -255,11 +253,11 @@ export default function App() {
           </div>
           <div className="hero-in mt-12 grid max-w-3xl grid-cols-2 gap-4 text-center sm:grid-cols-4">
             <div className="glass float-slow rounded-2xl p-4"><p data-count="13" className="font-display text-2xl font-bold">0</p><p className="mt-1 text-xs text-slate-400">Certificates listed</p></div>
-            <div className="glass float-slow rounded-2xl p-4"><p data-count="1" className="font-display text-2xl font-bold">0</p><p className="mt-1 text-xs text-slate-400">Hackathon win (to confirm)</p></div>
+            <div className="glass float-slow rounded-2xl p-4"><p data-count="5" className="font-display text-2xl font-bold">0</p><p className="mt-1 text-xs text-slate-400">Projects with source</p></div>
             <div className="glass float-slow rounded-2xl p-4"><p data-count="3" className="font-display text-2xl font-bold">0</p><p className="mt-1 text-xs text-slate-400">Shipped products</p></div>
             <div className="glass float-slow rounded-2xl p-4"><p data-count="9" className="font-display text-2xl font-bold">0</p><p className="mt-1 text-xs text-slate-400">Featured projects</p></div>
           </div>
-          <p className="hero-in mt-6 text-sm text-slate-500">Scroll ↓ — every section animates in, cards lift on hover, and the bar at the very top tracks your scroll.</p>
+          <p className="hero-in mt-6 text-sm text-slate-500">Scroll to explore my work.</p>
           <div className="scroll-hint mt-4 text-2xl text-cyan-300">↓</div>
         </div>
       </header>
@@ -290,7 +288,7 @@ export default function App() {
       </Section>
 
       <Section id="skills" kicker="Skills" title="What I work with">
-        <p data-reveal className="-mt-4 max-w-2xl text-slate-400">Consolidated from the projects in this portfolio. Keep only technologies you have actually used and can explain in an interview — this list is the starting point, not a claim of expert proficiency in every item.</p>
+        <p data-reveal className="-mt-4 max-w-2xl text-slate-400">Technologies I have used across my projects — from frontend and backend to AI/ML, data and APIs.</p>
         <div data-reveal className="relative mx-auto mt-10 h-52 w-52">
           <svg viewBox="0 0 200 200" className="spin-slow absolute inset-0 h-full w-full">
             <defs>
@@ -320,7 +318,7 @@ export default function App() {
       </Section>
 
       <Section id="projects" kicker="Featured projects" title="Projects — built, and concepts in progress">
-        <p data-reveal className="-mt-4 max-w-2xl text-slate-400">Status is labelled honestly: “Built” only where a working product exists, “Concept” where the idea is still proposed. Every source and live link below was fetched from my actual GitHub repos — nothing is linked unless that repo exists.</p>
+        <p data-reveal className="-mt-4 max-w-2xl text-slate-400">Status is labelled honestly: “Built” only where a working product exists, “Concept” where the idea is still proposed. Every project links to its real source or live site.</p>
         <div className="mt-8 grid gap-5 md:grid-cols-2">
           {projects.map((p) => (
             <article key={p.name} data-reveal className="glass card-glow group rounded-3xl p-7">
@@ -376,7 +374,7 @@ export default function App() {
               <li>• TVS Credit E.P.I.C 8.0 — IT track (per Unstop record).</li>
               <li>• ProduScope 2026: The Product Case Study Competition — Certificate of Participation (Unstop, 25 Oct 2026).</li>
             </ul>
-            <p className="mt-4 text-sm text-slate-500">Participation only — no win is claimed for any of these unless you confirm an award.</p>
+            <p className="mt-4 text-sm text-slate-500">Hackathon participation, listed with certificates where issued.</p>
           </div>
         </div>
         <div data-reveal className="glass mt-5 rounded-3xl p-7">
@@ -400,7 +398,7 @@ export default function App() {
             <ul className="mt-4 space-y-3 text-slate-300">
               {hackathons.map((h) => (<li key={h}>• {h}</li>))}
             </ul>
-            <p className="mt-4 text-sm text-slate-500">Participation only — add official event name, date, project, role and certificate link per entry. Do not describe a participation certificate as a win unless you received that award.</p>
+            <p className="mt-4 text-sm text-slate-500">National hackathons, 2026.</p>
           </div>
           <div data-reveal className="glass rounded-3xl p-7">
             <h3 className="font-display text-lg font-bold">Professional strengths</h3>
@@ -410,12 +408,12 @@ export default function App() {
           </div>
         </div>
         <div data-reveal className="glass mt-5 rounded-3xl p-7">
-          <h3 className="font-display text-lg font-bold">🏆 1 hackathon win — event to confirm</h3>
-          <p className="mt-3 text-slate-400">You told me you have <strong>14 hackathon certificates and 1 win</strong>. None of the 13 certificates you just sent is labelled a win — all are Participation, Excellence-in-Submission, or course certificates. Tell me which one you won (or if the win is the 14th certificate) and it will be highlighted at the top of this section, not guessed.</p>
+          <h3 className="font-display text-lg font-bold">🏆 Sangyan Hackathon — Certificate of Excellence in Submission</h3>
+          <p className="mt-3 text-slate-400">Certificate of Excellence in Submission, Unstop, Oct 2026 — for the Sangyan Hackathon submission.</p>
         </div>
         <div data-reveal className="glass mt-5 rounded-3xl p-7">
-          <h3 className="font-display text-lg font-bold">Certificates — all 13 you sent, by name</h3>
-          <p className="mt-3 text-slate-400">Exact titles, issuers and months as you sent them. You mentioned 14 in total, so one is still missing from this list — send that last one and it will be added here too.</p>
+          <h3 className="font-display text-lg font-bold">Certificates — 13 listed, by name</h3>
+          <p className="mt-3 text-slate-400">Certificates issued, with titles, issuers and months as issued.</p>
           <div className="mt-5 grid gap-4 sm:grid-cols-2">
             {certificates.map((c) => (
               <div key={c.name} className="card-glow rounded-2xl bg-white/5 p-5 ring-1 ring-white/10">
@@ -425,7 +423,7 @@ export default function App() {
               </div>
             ))}
           </div>
-          <p className="mt-5 text-sm text-slate-500">Kannada Digital Innovation Hackathon 2026 is not in this certificate list — its project was submitted successfully, but no certificate for it was in the list you sent, so it is not claimed as a certificate here.</p>
+          <p className="mt-5 text-sm text-slate-500">Kannada Digital Innovation Hackathon 2026 — project submitted successfully on 26 Oct 2026; certificate not yet listed here.</p>
         </div>
       </Section>
 
@@ -442,7 +440,7 @@ export default function App() {
           <div data-reveal className="glass rounded-3xl p-7">
             <h3 className="font-display font-bold">Email &amp; Resume</h3>
             <p className="mt-2 break-all text-slate-400"><a href="mailto:habeeb.c84@gmail.com" className="text-cyan-300 hover:text-cyan-200">habeeb.c84@gmail.com</a></p>
-            <p className="mt-2 text-slate-400">For opportunities, internships and collaborations — email me and I will share my latest resume.</p>
+            <p className="mt-2 text-slate-400">Open to internships and collaborations — get in touch.</p>
           </div>
         </div>
       </Section>

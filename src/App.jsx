@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Lenis from 'lenis'
@@ -6,6 +6,8 @@ import Lenis from 'lenis'
 gsap.registerPlugin(ScrollTrigger)
 
 const GITHUB = 'https://github.com/habeebc84-create'
+
+const ROLES = ['AI & ML Developer', 'React Developer', 'Full-Stack Builder']
 
 const skillGroups = [
   { title: 'Programming', items: ['Python', 'JavaScript', 'TypeScript', 'SQL'] },
@@ -133,6 +135,147 @@ const strengths = [
   'Continuous learning and experimentation',
 ]
 
+const MARQUEE_ITEMS = ['AI & ML', 'React', 'Hackathons', 'Computer Vision', 'Full-Stack', 'Python', 'Tailwind CSS', 'Data & APIs']
+
+/**
+ * Lightweight neural-dot particle field for the hero only.
+ * Original canvas code, no library. Dots drift slowly and link when close,
+ * with a gentle pull toward the pointer on fine-pointer devices.
+ * Pauses when the hero is off-screen or the tab is hidden, and never
+ * starts when the user prefers reduced motion.
+ */
+function HeroParticles() {
+  const canvasRef = useRef(null)
+
+  useEffect(() => {
+    const canvas = canvasRef.current
+    if (!canvas) return
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return
+
+    let rafId = 0
+    let running = true
+    let width = 0
+    let height = 0
+    let dpr = 1
+    const mouse = { x: -9999, y: -9999 }
+    let dots = []
+
+    const resize = () => {
+      const rect = canvas.parentElement.getBoundingClientRect()
+      dpr = Math.min(window.devicePixelRatio || 1, 2)
+      width = rect.width
+      height = rect.height
+      canvas.width = Math.floor(width * dpr)
+      canvas.height = Math.floor(height * dpr)
+      canvas.style.width = `${width}px`
+      canvas.style.height = `${height}px`
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+      const count = width < 640 ? 32 : width < 1024 ? 55 : 75
+      dots = Array.from({ length: count }, () => ({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        vx: (Math.random() - 0.5) * 0.25,
+        vy: (Math.random() - 0.5) * 0.25,
+        r: 1 + Math.random() * 1.6,
+      }))
+    }
+
+    const step = () => {
+      if (!running) return
+      ctx.clearRect(0, 0, width, height)
+      for (const d of dots) {
+        const dx = mouse.x - d.x
+        const dy = mouse.y - d.y
+        const dist = Math.hypot(dx, dy)
+        if (dist > 0 && dist < 140) {
+          d.vx += (dx / dist) * 0.008
+          d.vy += (dy / dist) * 0.008
+        }
+        d.vx = Math.max(-0.4, Math.min(0.4, d.vx))
+        d.vy = Math.max(-0.4, Math.min(0.4, d.vy))
+        d.x += d.vx
+        d.y += d.vy
+        if (d.x < 0 || d.x > width) d.vx *= -1
+        if (d.y < 0 || d.y > height) d.vy *= -1
+        d.x = Math.max(0, Math.min(width, d.x))
+        d.y = Math.max(0, Math.min(height, d.y))
+      }
+      for (let i = 0; i < dots.length; i++) {
+        for (let j = i + 1; j < dots.length; j++) {
+          const a = dots[i]
+          const b = dots[j]
+          const dist = Math.hypot(a.x - b.x, a.y - b.y)
+          if (dist < 120) {
+            ctx.strokeStyle = `rgba(34, 211, 238, ${(1 - dist / 120) * 0.22})`
+            ctx.lineWidth = 1
+            ctx.beginPath()
+            ctx.moveTo(a.x, a.y)
+            ctx.lineTo(b.x, b.y)
+            ctx.stroke()
+          }
+        }
+      }
+      for (const d of dots) {
+        ctx.fillStyle = 'rgba(165, 243, 252, 0.7)'
+        ctx.beginPath()
+        ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2)
+        ctx.fill()
+      }
+      rafId = requestAnimationFrame(step)
+    }
+
+    const onMouseMove = (e) => {
+      const rect = canvas.getBoundingClientRect()
+      mouse.x = e.clientX - rect.left
+      mouse.y = e.clientY - rect.top
+    }
+    const onMouseLeave = () => { mouse.x = -9999; mouse.y = -9999 }
+    const onVisibility = () => {
+      if (document.hidden) {
+        running = false
+        cancelAnimationFrame(rafId)
+      } else if (!running) {
+        running = true
+        rafId = requestAnimationFrame(step)
+      }
+    }
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !running && !document.hidden) {
+          running = true
+          rafId = requestAnimationFrame(step)
+        } else if (!entry.isIntersecting && running) {
+          running = false
+          cancelAnimationFrame(rafId)
+        }
+      },
+      { threshold: 0 },
+    )
+
+    resize()
+    rafId = requestAnimationFrame(step)
+    window.addEventListener('resize', resize)
+    canvas.parentElement.addEventListener('mousemove', onMouseMove)
+    canvas.parentElement.addEventListener('mouseleave', onMouseLeave)
+    document.addEventListener('visibilitychange', onVisibility)
+    observer.observe(canvas.parentElement)
+
+    return () => {
+      running = false
+      cancelAnimationFrame(rafId)
+      window.removeEventListener('resize', resize)
+      canvas.parentElement?.removeEventListener('mousemove', onMouseMove)
+      canvas.parentElement?.removeEventListener('mouseleave', onMouseLeave)
+      document.removeEventListener('visibilitychange', onVisibility)
+      observer.disconnect()
+    }
+  }, [])
+
+  return <canvas ref={canvasRef} aria-hidden="true" className="particle-canvas" />
+}
+
 function Section({ id, kicker, title, children }) {
   return (
     <section id={id} className="relative mx-auto max-w-6xl scroll-mt-24 px-5 py-20 sm:px-8 sm:py-24">
@@ -145,13 +288,35 @@ function Section({ id, kicker, title, children }) {
 
 export default function App() {
   const [menuOpen, setMenuOpen] = useState(false)
+  const [roleIndex, setRoleIndex] = useState(0)
+
+  // Rotating role line under the hero title. Paused for reduced motion.
   useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined
+    const id = window.setInterval(() => setRoleIndex((i) => (i + 1) % ROLES.length), 2800)
+    return () => window.clearInterval(id)
+  }, [])
+
+  useEffect(() => {
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const finePointer = window.matchMedia('(pointer: fine)').matches
+
+    // Reduced motion: no smooth scroll, no entrance animation, counters
+    // go straight to their final values, and everything stays visible.
+    if (reducedMotion) {
+      document.querySelectorAll('[data-count]').forEach((el) => {
+        el.textContent = String(Number(el.dataset.count || 0))
+      })
+      return undefined
+    }
+
     const lenis = new Lenis({ lerp: 0.1, smoothWheel: true })
     let rafId
     const raf = (time) => { lenis.raf(time); rafId = requestAnimationFrame(raf) }
     rafId = requestAnimationFrame(raf)
     lenis.on('scroll', ScrollTrigger.update)
-    // Fix: Lenis takes over scrolling, so plain #anchor jumps did not scroll
+
+    // Lenis takes over scrolling, so plain #anchor jumps did not scroll
     // reliably. Route every in-page link through Lenis instead.
     const anchorHandler = (e) => {
       const link = e.target.closest('a[href^="#"]')
@@ -159,48 +324,123 @@ export default function App() {
       const target = document.querySelector(link.getAttribute('href'))
       if (!target) return
       e.preventDefault()
+      setMenuOpen(false)
       lenis.scrollTo(target, { offset: -80, duration: 1.2 })
     }
     document.addEventListener('click', anchorHandler)
 
+    const glow = document.querySelector('.cursor-glow')
+    let glowXTo = null
+    let glowYTo = null
+    let glowHandler = null
+    if (glow && finePointer) {
+      glowXTo = gsap.quickTo(glow, 'x', { duration: 0.6, ease: 'power3' })
+      glowYTo = gsap.quickTo(glow, 'y', { duration: 0.6, ease: 'power3' })
+      glowHandler = (e) => { glowXTo(e.clientX - 200); glowYTo(e.clientY - 200) }
+      window.addEventListener('mousemove', glowHandler)
+    }
+
+    // Magnetic primary buttons (desktop, fine pointer only).
+    const magneticEls = finePointer ? Array.from(document.querySelectorAll('[data-magnetic]')) : []
+    const magneticCleanups = magneticEls.map((el) => {
+      const onMove = (e) => {
+        const rect = el.getBoundingClientRect()
+        const x = e.clientX - (rect.left + rect.width / 2)
+        const y = e.clientY - (rect.top + rect.height / 2)
+        gsap.to(el, { x: x * 0.25, y: y * 0.3, duration: 0.4, ease: 'power3.out' })
+      }
+      const onLeave = () => gsap.to(el, { x: 0, y: 0, duration: 0.6, ease: 'elastic.out(1, 0.4)' })
+      el.addEventListener('mousemove', onMove)
+      el.addEventListener('mouseleave', onLeave)
+      return () => {
+        el.removeEventListener('mousemove', onMove)
+        el.removeEventListener('mouseleave', onLeave)
+      }
+    })
+
+    // Subtle tilt on project cards (desktop, fine pointer only).
+    const tiltEls = finePointer ? Array.from(document.querySelectorAll('[data-tilt]')) : []
+    const tiltCleanups = tiltEls.map((el) => {
+      const onMove = (e) => {
+        const rect = el.getBoundingClientRect()
+        const px = (e.clientX - rect.left) / rect.width - 0.5
+        const py = (e.clientY - rect.top) / rect.height - 0.5
+        gsap.to(el, { rotateY: px * 5, rotateX: -py * 5, transformPerspective: 900, duration: 0.4, ease: 'power2.out' })
+      }
+      const onLeave = () => gsap.to(el, { rotateX: 0, rotateY: 0, duration: 0.6, ease: 'power3.out' })
+      el.addEventListener('mousemove', onMove)
+      el.addEventListener('mouseleave', onLeave)
+      return () => {
+        el.removeEventListener('mousemove', onMove)
+        el.removeEventListener('mouseleave', onLeave)
+      }
+    })
+
     const ctx = gsap.context(() => {
-      gsap.from('.hero-in', { y: 40, opacity: 0, duration: 1, ease: 'power3.out', stagger: 0.12 })
+      // Hero title, letter by letter — one character at a time.
+      gsap.from('.hero-letter', {
+        y: 80, opacity: 0, rotateX: -50, duration: 0.9, ease: 'power3.out', stagger: 0.055,
+      })
+      gsap.from('.hero-in', { y: 40, opacity: 0, duration: 1, ease: 'power3.out', stagger: 0.12, delay: 0.35 })
+
       gsap.utils.toArray('[data-reveal]').forEach((el) => {
         gsap.from(el, {
           y: 50, opacity: 0, scale: 0.97, duration: 0.9, ease: 'power3.out',
-          scrollTrigger: { trigger: el, start: 'top 88%' },
+          scrollTrigger: { trigger: el, start: 'top 88%', toggleActions: 'play none none none' },
         })
       })
+
+      // Orbs: the outer wrapper carries the scroll parallax, the inner orb
+      // carries the endless float. Two tweens never fight over one element
+      // now — that was the old bug, both tweens targeted .orb-a / .orb-b.
       gsap.to('.orb-a', { y: 60, duration: 6, ease: 'sine.inOut', yoyo: true, repeat: -1 })
       gsap.to('.orb-b', { y: -50, x: 30, duration: 7, ease: 'sine.inOut', yoyo: true, repeat: -1 })
-      // Parallax orbs on scroll
-      gsap.to('.orb-a', { yPercent: 30, ease: 'none', scrollTrigger: { trigger: '#home', start: 'top top', end: 'bottom top', scrub: true } })
-      gsap.to('.orb-b', { yPercent: -20, ease: 'none', scrollTrigger: { trigger: '#home', start: 'top top', end: 'bottom top', scrub: true } })
-      // Animated counters: elements carry data-count="14" etc.
+      gsap.to('.orb-wrap-a', { yPercent: 30, ease: 'none', scrollTrigger: { trigger: '#home', start: 'top top', end: 'bottom top', scrub: true } })
+      gsap.to('.orb-wrap-b', { yPercent: -20, ease: 'none', scrollTrigger: { trigger: '#home', start: 'top top', end: 'bottom top', scrub: true } })
+
+      // Animated counters, using the real numbers in the markup.
+      // Guarded so StrictMode / re-runs never animate a counter twice.
       gsap.utils.toArray('[data-count]').forEach((el) => {
+        if (el.dataset.counted) return
         const target = Number(el.dataset.count || 0)
         const obj = { v: 0 }
         gsap.to(obj, {
           v: target, duration: 1.6, ease: 'power2.out',
-          scrollTrigger: { trigger: el, start: 'top 92%', once: true },
+          scrollTrigger: {
+            trigger: el, start: 'top 92%', once: true,
+            onEnter: () => { el.dataset.counted = 'true' },
+          },
           onUpdate: () => { el.textContent = String(Math.round(obj.v)) },
+          onComplete: () => { el.textContent = String(target) },
         })
       })
-      // Scroll progress bar
-      gsap.to('.scroll-progress', {
+
+      // Scroll progress bar.
+      gsap.fromTo('.scroll-progress', { scaleX: 0 }, {
         scaleX: 1, ease: 'none',
         scrollTrigger: { trigger: document.body, start: 'top top', end: 'bottom bottom', scrub: 0.3 },
       })
-      // Mouse-follow glow (desktop only, element hidden on small screens)
-      const glow = document.querySelector('.cursor-glow')
-      if (glow && window.matchMedia('(pointer: fine)').matches) {
-        const xTo = gsap.quickTo(glow, 'x', { duration: 0.6, ease: 'power3' })
-        const yTo = gsap.quickTo(glow, 'y', { duration: 0.6, ease: 'power3' })
-        window.addEventListener('mousemove', (e) => { xTo(e.clientX - 200); yTo(e.clientY - 200) })
-      }
     })
-    return () => { document.removeEventListener('click', anchorHandler); cancelAnimationFrame(rafId); lenis.destroy(); ctx.revert() }
+
+    const onLoad = () => ScrollTrigger.refresh()
+    window.addEventListener('load', onLoad)
+    // Refresh after fonts settle, so reveal triggers are measured correctly.
+    const refreshTimer = window.setTimeout(() => ScrollTrigger.refresh(), 1200)
+
+    return () => {
+      document.removeEventListener('click', anchorHandler)
+      window.removeEventListener('load', onLoad)
+      window.clearTimeout(refreshTimer)
+      if (glowHandler) window.removeEventListener('mousemove', glowHandler)
+      magneticCleanups.forEach((fn) => fn())
+      tiltCleanups.forEach((fn) => fn())
+      cancelAnimationFrame(rafId)
+      lenis.destroy()
+      ctx.revert()
+    }
   }, [])
+
+  const titleLetters = 'C. Habeeb'.split('')
 
   return (
     <div className="relative min-h-screen overflow-x-clip bg-[#070b14]">
@@ -218,11 +458,11 @@ export default function App() {
             <a href="#contact" className="hover:text-white">Contact</a>
           </div>
           <a href={GITHUB} target="_blank" rel="noreferrer" className="rounded-full bg-cyan-400 px-4 py-2 text-sm font-semibold text-slate-950 hover:bg-cyan-300">GitHub</a>
-          <button onClick={() => setMenuOpen(!menuOpen)} aria-label="Toggle menu" className="glass rounded-full px-4 py-2 text-sm font-semibold md:hidden">☰ Menu</button>
+          <button onClick={() => setMenuOpen(!menuOpen)} aria-label="Toggle menu" aria-expanded={menuOpen} className="glass rounded-full px-4 py-2 text-sm font-semibold md:hidden">☰ Menu</button>
         </div>
         {menuOpen && (
           <div className="mx-auto max-w-6xl px-5 sm:px-8 md:hidden">
-            <div className="glass flex flex-col gap-3 rounded-3xl px-5 py-4 text-sm text-slate-200">
+            <div className="flex flex-col gap-3 rounded-3xl border border-white/10 bg-[#0a1120f5] px-5 py-4 text-sm text-slate-200 shadow-2xl shadow-black/60 backdrop-blur-xl">
               {[['#about', 'About'], ['#skills', 'Skills'], ['#projects', 'Projects'], ['#achievements', 'Achievements'], ['#hackathons', 'Hackathons'], ['#contact', 'Contact']].map(([href, label]) => (
                 <a key={href} href={href} onClick={() => setMenuOpen(false)} className="hover:text-white">{label}</a>
               ))}
@@ -232,13 +472,24 @@ export default function App() {
       </nav>
 
       <header id="home" className="relative overflow-hidden pt-36 pb-24 sm:pt-44">
-        <div className="orb orb-a left-[-10%] top-[-10%] h-96 w-96 bg-cyan-500" />
-        <div className="orb orb-b right-[-5%] top-[30%] h-80 w-80 bg-violet-500" />
+        <HeroParticles />
+        <div className="orb-wrap-a absolute left-[-10%] top-[-10%] h-96 w-96" aria-hidden="true">
+          <div className="orb orb-a h-full w-full bg-cyan-500" />
+        </div>
+        <div className="orb-wrap-b absolute right-[-5%] top-[30%] h-80 w-80" aria-hidden="true">
+          <div className="orb orb-b h-full w-full bg-violet-500" />
+        </div>
         <div className="relative mx-auto max-w-6xl px-5 sm:px-8">
           <p className="hero-in text-sm font-semibold uppercase tracking-[0.25em] text-cyan-300">AI &amp; ML Developer · Portfolio · Open to internships</p>
-          <h1 className="hero-in mt-5 font-display text-5xl font-bold leading-[1.05] sm:text-7xl">
-            C. Habeeb
+          <h1 aria-label="C. Habeeb" className="mt-5 font-display text-5xl font-bold leading-[1.05] sm:text-7xl">
+            {titleLetters.map((ch, i) => (
+              <span key={i} aria-hidden="true" className="hero-letter">{ch === ' ' ? '\u00a0' : ch}</span>
+            ))}
           </h1>
+          <p className="hero-in mt-4 flex min-h-[1.75rem] items-center gap-2 text-lg font-semibold text-cyan-200 sm:text-xl" aria-live="polite">
+            <span className="role-dot" aria-hidden="true" />
+            {ROLES[roleIndex]}
+          </p>
           <p className="hero-in mt-5 max-w-3xl text-xl font-medium text-slate-200 sm:text-2xl">
             Building Intelligent Solutions with <span className="text-gradient">AI, Machine Learning</span> &amp; Modern Web Technologies
           </p>
@@ -247,9 +498,9 @@ export default function App() {
             Second-year B.Tech (CSE — AI &amp; ML) at Saveetha School of Engineering, SIMATS, Chennai.
           </p>
           <div className="hero-in mt-8 flex flex-wrap gap-3">
-            <a href="#projects" className="rounded-full bg-cyan-400 px-6 py-3 font-semibold text-slate-950 hover:bg-cyan-300">View Projects</a>
-            <a href={GITHUB} target="_blank" rel="noreferrer" className="glass rounded-full px-6 py-3 font-semibold hover:bg-white/10">GitHub Profile</a>
-            <a href="#contact" className="glass rounded-full px-6 py-3 font-semibold hover:bg-white/10">Contact</a>
+            <a data-magnetic href="#projects" className="rounded-full bg-cyan-400 px-6 py-3 font-semibold text-slate-950 hover:bg-cyan-300">View Projects</a>
+            <a data-magnetic href={GITHUB} target="_blank" rel="noreferrer" className="glass rounded-full px-6 py-3 font-semibold hover:bg-white/10">GitHub Profile</a>
+            <a data-magnetic href="#contact" className="glass rounded-full px-6 py-3 font-semibold hover:bg-white/10">Contact</a>
           </div>
           <div className="hero-in mt-12 grid max-w-3xl grid-cols-2 gap-4 text-center sm:grid-cols-4">
             <div className="glass float-slow rounded-2xl p-4"><p data-count="13" className="font-display text-2xl font-bold">0</p><p className="mt-1 text-xs text-slate-400">Certificates listed</p></div>
@@ -258,14 +509,18 @@ export default function App() {
             <div className="glass float-slow rounded-2xl p-4"><p data-count="9" className="font-display text-2xl font-bold">0</p><p className="mt-1 text-xs text-slate-400">Featured projects</p></div>
           </div>
           <p className="hero-in mt-6 text-sm text-slate-500">Scroll to explore my work.</p>
-          <div className="scroll-hint mt-4 text-2xl text-cyan-300">↓</div>
+          <div className="scroll-hint mt-4 text-2xl text-cyan-300" aria-hidden="true">↓</div>
         </div>
       </header>
 
-      <div className="relative overflow-hidden border-y border-white/10 bg-white/[0.03] py-4">
-        <div className="marquee-track gap-8 text-sm font-semibold uppercase tracking-[0.2em] text-slate-300">
-          {['AI & ML', 'React', 'Hackathons', 'Computer Vision', 'Full-Stack', 'Python', 'Tailwind CSS', 'Data & APIs', 'AI & ML', 'React', 'Hackathons', 'Computer Vision', 'Full-Stack', 'Python', 'Tailwind CSS', 'Data & APIs'].map((t, i) => (
-            <span key={i} className="whitespace-nowrap">{t} <span className="ml-8 text-cyan-300">✦</span></span>
+      <div className="relative overflow-hidden border-y border-white/10 bg-white/[0.03] py-4" aria-hidden="true">
+        <div className="marquee-track text-sm font-semibold uppercase tracking-[0.2em] text-slate-300">
+          {[0, 1].map((half) => (
+            <div key={half} className="marquee-half">
+              {MARQUEE_ITEMS.map((t) => (
+                <span key={`${half}-${t}`} className="whitespace-nowrap">{t} <span className="ml-8 text-cyan-300">✦</span></span>
+              ))}
+            </div>
           ))}
         </div>
       </div>
@@ -290,7 +545,7 @@ export default function App() {
       <Section id="skills" kicker="Skills" title="What I work with">
         <p data-reveal className="-mt-4 max-w-2xl text-slate-400">Technologies I have used across my projects — from frontend and backend to AI/ML, data and APIs.</p>
         <div data-reveal className="relative mx-auto mt-10 h-52 w-52">
-          <svg viewBox="0 0 200 200" className="spin-slow absolute inset-0 h-full w-full">
+          <svg viewBox="0 0 200 200" aria-hidden="true" className="spin-slow absolute inset-0 h-full w-full">
             <defs>
               <path id="skill-circle" d="M100,100 m-78,0 a78,78 0 1,1 156,0 a78,78 0 1,1 -156,0" />
             </defs>
@@ -321,7 +576,7 @@ export default function App() {
         <p data-reveal className="-mt-4 max-w-2xl text-slate-400">Status is labelled honestly: “Built” only where a working product exists, “Concept” where the idea is still proposed. Every project links to its real source or live site.</p>
         <div className="mt-8 grid gap-5 md:grid-cols-2">
           {projects.map((p) => (
-            <article key={p.name} data-reveal className="glass card-glow group rounded-3xl p-7">
+            <article key={p.name} data-reveal data-tilt className="glass card-glow group rounded-3xl p-7">
               <div className="flex items-start justify-between gap-3">
                 <p className="text-xs font-semibold uppercase tracking-widest text-cyan-300">{p.tag}</p>
                 <span className="shrink-0 rounded-full bg-cyan-400/15 px-3 py-1 text-xs font-semibold text-cyan-200 ring-1 ring-cyan-400/30">{p.status}</span>

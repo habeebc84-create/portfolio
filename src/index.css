@@ -66,6 +66,55 @@ body {
   animation-play-state: paused;
 }
 
+/* Two identical halves, no gap between them, so translateX(-50%) lands
+   exactly on the second half — the old gap-8 version jumped each loop. */
+.marquee-half {
+  display: flex;
+  flex-shrink: 0;
+  gap: 2rem;
+  padding-right: 2rem;
+}
+
+.particle-canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.hero-letter {
+  display: inline-block;
+  will-change: transform, opacity;
+}
+
+.role-dot {
+  display: inline-block;
+  height: 0.6rem;
+  width: 0.6rem;
+  flex-shrink: 0;
+  border-radius: 9999px;
+  background: #22d3ee;
+  box-shadow: 0 0 12px rgba(34, 211, 238, 0.9);
+  animation: role-pulse 2.8s ease-in-out infinite;
+}
+
+@keyframes role-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.75); }
+}
+
+.orb-wrap-a,
+.orb-wrap-b {
+  position: absolute;
+  pointer-events: none;
+}
+
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid #22d3ee;
+  outline-offset: 3px;
+}
+
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
@@ -104,13 +153,17 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .marquee-track, .text-gradient, .float-slow, .scroll-hint, .spin-slow {
+  .marquee-track, .text-gradient, .float-slow, .scroll-hint, .spin-slow, .role-dot {
     animation: none;
+  }
+  .particle-canvas {
+    display: none;
   }
 }
 
 .orb {
   position: absolute;
+  inset: 0;
   border-radius: 9999px;
   filter: blur(70px);
   opacity: 0.35;
